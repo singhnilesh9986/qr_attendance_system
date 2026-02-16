@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>QRAttend - Smart Attendance</title>
+    
+    <link rel="stylesheet" href="{% static 'attendance/home.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { "primary": "#137fec" },
+                    fontFamily: { "display": ["Inter"] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#f6f7f8]">
+
+<div id="reader-container" style="display:none;" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center">
+    <div id="reader" class="w-full max-w-md aspect-square bg-white rounded-lg"></div>
+    <button onclick="location.reload()" class="mt-10 bg-white text-black px-8 py-3 rounded-full font-bold shadow-2xl">
+        Cancel
+    </button>
+</div>
+
+<header class="sticky top-0 z-50 w-full border-b border-[#f0f2f4] bg-white/80 backdrop-blur-md px-4 md:px-10 lg:px-40 py-3">
+    <div class="max-w-[1280px] mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-4 text-primary">
+            <h2 class="text-xl font-bold font-display text-[#111418]">QRAttend</h2>
+        </div>
+        
+<nav class="flex gap-8 items-center">
+    {% if user.is_authenticated %}
+        <div class="relative">
+    <button id="avatarBtn" class="w-10 h-10 bg-[#137fec] text-white flex items-center justify-center rounded-full font-black shadow-md focus:outline-none active:scale-90 transition-transform">
+        {{ user.username|slice:":1"|upper }}
+    </button>
+    
+    <div id="avatarMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 border border-gray-100 z-50">
+        <a href="{% url 'admin_logout' %}" class="block px-4 py-2 text-sm text-red-600 font-bold hover:bg-red-50">
+            Sign Out
+        </a>
+    </div>
+</div>
+
+        <script>
+            const btn = document.getElementById('avatarBtn');
+            const menu = document.getElementById('avatarMenu');
+            if(btn) {
+                btn.addEventListener('click', (e) => {
+                    menu.classList.toggle('hidden');
+                    e.stopPropagation();
+                });
+                window.addEventListener('click', () => menu.classList.add('hidden'));
+            }
+        </script>
+    {% else %}
+        <a href="{% url 'login_selection' %}" class="bg-[#f0f2f4] px-4 py-2 rounded-lg text-sm font-bold">Login</a>
+    {% endif %}
+</nav>
+    </div>
+</header>
+
+<main class="flex flex-col items-center">
+    <section class="w-full px-4 md:px-10 lg:px-40 py-10 md:py-20 max-w-[1280px]">
+        <div class="flex flex-col gap-10 md:flex-row items-center">
+            <div class="flex flex-col gap-8 flex-1">
+                <h1 class="text-4xl font-black md:text-6xl font-display leading-tight">
+                    Effortless Attendance Management with <span class="text-primary">QR Technology</span>
+                </h1>
+                <p class="text-[#4b5563] text-lg max-w-[540px]">Streamline your check-in process. Secure, real-time, and paperless tracking for schools and businesses.</p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="launchScanner()" class="bg-primary text-white px-6 py-4 rounded-xl font-bold shadow-lg flex items-center transition-all hover:-translate-y-1">
+                        <span class="material-symbols-outlined mr-2">qr_code_scanner</span> Launch Scanner
+                    </button>
+                    <a href="{% url 'login_selection' %}" class="bg-white border-2 border-[#f0f2f4] px-6 py-4 rounded-xl font-bold flex items-center transition-all hover:bg-gray-50">
+                        <span class="material-symbols-outlined mr-2">login</span> Login
+                    </a>
+                </div>
+            </div>
+            <div class="w-full flex-1">
+                <div class="hero-image-container relative aspect-video rounded-2xl overflow-hidden border border-primary/10 bg-white">
+                    <img src="https://img.freepik.com/free-vector/qr-code-concept-illustration_114360-5853.jpg" alt="QR Scanner Illustration" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="w-full px-4 md:px-10 lg:px-40 py-8 bg-white border-y border-[#f0f2f4]">
+        <div class="max-w-[960px] mx-auto flex flex-wrap gap-8 justify-center text-center">
+            <div class="flex-1 min-w-[150px]"><p class="text-primary text-3xl font-black">10k+</p><p class="text-[#617589] text-xs font-bold uppercase">Monthly Scans</p></div>
+            <div class="flex-1 min-w-[150px]"><p class="text-primary text-3xl font-black">500+</p><p class="text-[#617589] text-xs font-bold uppercase">Organizations</p></div>
+            <div class="flex-1 min-w-[150px]"><p class="text-primary text-3xl font-black">99.9%</p><p class="text-[#617589] text-xs font-bold uppercase">System Uptime</p></div>
+        </div>
+    </section>
+
+    <section class="w-full px-4 md:px-10 lg:px-40 py-20 max-w-[1280px]">
+        <div class="flex flex-col gap-12 text-center items-center">
+            <div class="flex flex-col gap-4">
+                <span class="text-primary font-bold text-sm tracking-widest uppercase">Platform Capabilities</span>
+                <h2 class="text-3xl md:text-4xl font-black font-display">Powerful tools for modern attendance tracking</h2>
+                <p class="text-[#617589] text-lg max-w-[600px] mx-auto">Our all-in-one platform gives you full control over your organization's presence logs.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                <div class="feature-card p-8 rounded-2xl border border-[#dbe0e6] bg-white">
+                    <span class="material-symbols-outlined text-primary text-4xl mb-4">qr_code_2</span>
+                    <h3 class="text-xl font-bold mb-2">Instant QR Scanning</h3>
+                    <p class="text-[#617589]">Generate unique dynamic codes and track attendance in milliseconds.</p>
+                </div>
+                <div class="feature-card p-8 rounded-2xl border border-[#dbe0e6] bg-white">
+                    <span class="material-symbols-outlined text-primary text-4xl mb-4">group</span>
+                    <h3 class="text-xl font-bold mb-2">User Management</h3>
+                    <p class="text-[#617589]">Effortlessly organize students and specific departments from one place.</p>
+                </div>
+                <div class="feature-card p-8 rounded-2xl border border-[#dbe0e6] bg-white">
+                    <span class="material-symbols-outlined text-primary text-4xl mb-4">analytics</span>
+                    <h3 class="text-xl font-bold mb-2">Real-time Reports</h3>
+                    <p class="text-[#617589]">View participation heatmaps and export detailed logs in one click.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="w-full border-t border-[#f0f2f4] px-4 md:px-10 lg:px-40 py-12 bg-white mt-10">
+    <div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+        <p class="text-[#617589] text-sm">© 2026 QRAttend System. All rights reserved.</p>
+        <div class="flex gap-8 text-sm font-bold uppercase text-[#111418]">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="{% static 'attendance/student_scanner.js' %}"></script>
+
+</body>
+</html>

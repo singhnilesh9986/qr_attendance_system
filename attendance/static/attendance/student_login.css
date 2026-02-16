@@ -1,0 +1,113 @@
+body {
+  margin: 0;
+  padding: 0;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: "Inter", sans-serif;
+}
+
+.login-card {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 40px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 448px;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center;
+  border: 1px solid #f3f4f6;
+}
+
+form {
+  width: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 1rem;
+}
+
+.form-group {
+  width: 100%;
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  margin-left: 0.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem;
+  background-color: #e8f0fe;
+  border: none;
+  border-radius: 0.75rem;
+  outline: none;
+  color: #374151;
+}
+
+.btn-login {
+  width: 100% !important;
+  background-color: #137fec !important;
+  color: white !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(19, 127, 236, 0.3);
+}
+
+.btn-login:hover {
+  background-color: #2563eb;
+}
+
+.google-btn {
+  width: 100% !important;
+  background-color: white;
+  border: 1px solid #e5e7eb !important;
+  text-decoration: none;
+  color: #374151;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  gap: 12px;
+}
+
+.divider-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.divider-line {
+  flex-grow: 1;
+  border-top: 1px solid #f3f4f6;
+}
+
+.divider-text {
+  margin: 0 1rem;
+  color: #d1d5db;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}

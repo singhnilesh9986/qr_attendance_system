@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registered Students | Admin</title>
+    <link rel="stylesheet" href="{% static 'attendance/daily_logs.css' %}">
+    <link rel="stylesheet" href="{% static 'attendance/students_list.css' %}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div style="color: #137fec; font-weight: 900; padding-left: 18px; font-size: 18px;">◆ Attendance QR</div>
+            <div style="padding-left: 18px; margin-top: 15px;">
+                <p style="font-size: 12px; font-weight: 700; margin: 0; color: #1e293b;">Admin Portal</p>
+               
+            </div>
+        </div>
+
+        <nav class="side-nav" style="margin-top: auto; margin-bottom: 80px;"> 
+            <a href="{% url 'admin_dashboard' %}" class="nav-link">
+                <span style="font-size: 16px;">📷</span> Live Scanner
+            </a>
+            <a href="{% url 'daily_logs' %}" class="nav-link">
+                <span style="font-size: 16px;">📅</span> Daily Logs
+            </a>
+            <a href="{% url 'students_list' %}" class="nav-link active">
+                <span style="font-size: 16px;">👥</span> Students
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-stage">
+        <div class="day-title">
+            <div class="day-label big-label">USER DATABASE</div>
+            <h2 style="font-size: 32px; font-weight: 900; margin-top: 10px;">Registered <span style="color: #137fec;">Students</span></h2>
+            <p class="day-stats">Total: {{ students|length }} active records</p>
+        </div>
+
+        <div class="student-grid">
+            {% for student in students %}
+            <div class="user-card">
+                <div class="avatar-box">
+                    {{ student.username|slice:":1"|upper }}
+                </div>
+                <div class="user-info">
+                    <h3>{{ student.username }}</h3>
+                    <p>{{ student.email|default:"No email registered" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

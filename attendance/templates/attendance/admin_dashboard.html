@@ -1,0 +1,225 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Attendance Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'attendance/admin_dashboard.css' %}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="{% static 'attendance/admin_dashboard.js' %}"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="brand">💠 Attendance QR</div>
+
+        <div class="admin-profile">
+          <h3>Admin Portal</h3>
+         
+        </div>
+
+        <div class="sidebar-selectors">
+          <form id="qrForm" method="POST" action="{% url 'start_session' %}">
+            {% csrf_token %}
+            <input type="hidden" name="admin_lat" id="admin_lat" />
+            <input type="hidden" name="admin_long" id="admin_long" />
+
+            <div class="sidebar-selectors">
+              <div class="field">
+                <label>Department</label>
+                <select name="dept">
+                  {% for dept in departments %}
+                  <option value="{{ dept.id }}">{{ dept.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="field">
+                <label>Subject</label>
+                <select name="subject">
+                  {% for sub in subjects %}
+                  <option value="{{ sub.id }}">{{ sub.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button
+                type="button"
+                onclick="getLaptopLocation()"
+                class="btn-generate-blue"
+              >
+                Generate QR
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <nav class="side-nav">
+          <a href="{% url 'admin_dashboard' %}" class="nav-link active"
+            >📷 Live Scanner</a
+          >
+          <a href="{% url 'daily_logs' %}" class="nav-link">📅 Daily Logs</a>
+          <a href="{% url 'students_list' %}" class="nav-link">
+            <span class="icon">👥</span> Students
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-stage">
+        <header class="main-header flex justify-between items-center">
+          <div class="welcome">
+            <h1>Live Attendance <span class="badge-active">ACTIVE</span></h1>
+            <p>Display this QR for students to scan automatically.</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <form
+              action="{% url 'archive_today' %}"
+              method="POST"
+              style="margin: 0"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition shadow-md flex items-center gap-2"
+              >
+                📁 Archive Day
+              </button>
+            </form>
+
+            <button
+              type="button"
+              onclick="toggleModal(true)"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md"
+            >
+              🖋️ Manual Entry
+            </button>
+          </div>
+        </header>
+
+        <div class="dashboard-content">
+          <div class="qr-zone">
+            <div class="qr-scanner-frame">
+              {% if active_session %}
+              <div class="qr-wrapper">
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ active_session.current_token }}"
+                  alt="QR"
+                />
+                <form method="POST" action="{% url 'stop_session' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-done-pill">DONE</button>
+                </form>
+              </div>
+              {% else %}
+              <p class="qr-placeholder">Select a subject to start</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="scans-panel">
+            <div class="panel-head">
+              <h3>Recent Scans</h3>
+              <span class="total-count"
+                >Total: {{ present_students|length }}</span
+              >
+            </div>
+            <div class="scroll-list scan-list">
+              {% for record in present_students %}
+              <div
+                class="student-card flex items-center gap-4 p-3 border-b border-gray-100"
+              >
+                <div
+                  class="avatar bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold"
+                >
+                  {{ record.student.username|slice:":1"|upper }}
+                </div>
+                <div class="details flex-1">
+                  <strong class="block text-gray-800"
+                    >{{ record.student.username }}</strong
+                  >
+                  <small class="text-gray-500 text-xs uppercase"
+                    >ID: #STU-{{ record.student.id }}</small
+                  >
+                </div>
+                <div
+                  class="time-status text-xs font-semibold text-green-500 bg-green-50 px-2 py-1 rounded"
+                >
+                  Just now
+                </div>
+              </div>
+              {% empty %}
+              <p class="empty-msg text-center text-gray-400 py-4">
+                Waiting for first scan...
+              </p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div
+      id="manualModal"
+      class="hidden fixed inset-0 z-[200] flex items-center justify-center backdrop-blur-sm bg-black/40"
+    >
+      <div
+        class="bg-white p-6 rounded-xl shadow-2xl w-96 border border-gray-200"
+      >
+        <h2 class="text-xl font-bold mb-4 text-gray-800 text-left">
+          Manual Attendance
+        </h2>
+
+        <div class="space-y-4">
+          <div class="text-left">
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Select Student</label
+            >
+            <select
+              id="manualStudentId"
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white text-gray-800"
+            >
+              <option value="">-- Choose Student --</option>
+              {% for student in all_students %}
+              <option value="{{ student.id }}">{{ student.username }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="flex gap-3 pt-2">
+            <button
+              onclick="submitManualEntry()"
+              class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              Mark Present
+            </button>
+            <button
+              onclick="toggleModal(false)"
+              class="flex-1 bg-gray-100 text-gray-600 py-2 rounded-lg font-semibold hover:bg-gray-200 transition"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const activeSessionId = "{{ active_session.id }}";
+
+      function toggleModal(show) {
+        const modal = document.getElementById("manualModal");
+        if (show) {
+          modal.classList.remove("hidden");
+        } else {
+          modal.classList.add("hidden");
+        }
+      }
+    </script>
+  </body>
+</html>

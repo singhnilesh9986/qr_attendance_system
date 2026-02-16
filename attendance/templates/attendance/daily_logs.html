@@ -1,0 +1,108 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daily Attendance Logs</title>
+    <link rel="stylesheet" href="{% static 'attendance/admin_dashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'attendance/daily_logs.css' %}" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="brand">💠 Attendance QR</div>
+          <div class="admin-profile">
+            <h3>Admin Portal</h3>
+            
+          </div>
+        </div>
+
+        <nav class="side-nav">
+          <a href="{% url 'admin_dashboard' %}" class="nav-link">
+            <span class="icon">📷</span> Live Scanner
+          </a>
+          <a href="{% url 'daily_logs' %}" class="nav-link active">
+            <span class="icon">📅</span> Daily Logs
+          </a>
+          <a href="{% url 'students_list' %}" class="nav-link">
+            <span class="icon">👥</span> Students
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-stage">
+        <header class="main-header">
+          <div class="welcome">
+            <h1>Attendance History</h1>
+            <p>Select a day and lecture to view attendance details.</p>
+          </div>
+        </header>
+
+        <div class="dashboard-content scrollable-area">
+          {% regroup sessions by date as daily_list %}
+
+          {% for day in daily_list %}
+          <div class="log-card">
+            <div class="day-header" onclick="toggleView('day-{{ forloop.counter }}')">
+              <div class="day-title">
+                <span class="day-label">ARCHIVE • DAY {{ day.list.0.day_number }}</span>
+                <h2>{{ day.grouper }}</h2>
+              </div>
+              <div class="day-stats">
+                <strong>{{ day.list|length }}</strong> Lectures Found
+              </div>
+            </div>
+
+            <div id="day-{{ forloop.counter }}" class="hidden-content">
+              {% for session in day.list %}
+              <div class="lecture-item">
+                <div class="lecture-summary" onclick="toggleView('students-{{ session.id }}')">
+                  <div class="lecture-info">
+                    <span class="session-tag">Session {{ session.session_number }}</span>
+                    <h3>{{ session.subject.name }}</h3>
+                  </div>
+                  <div class="present-box">
+                    <span class="count">{{ session.records.count }}</span>
+                    <span class="label">Present</span>
+                  </div>
+                </div>
+
+                <div id="students-{{ session.id }}" class="hidden-content student-detail-area">
+                  <div class="student-grid">
+                    {% for record in session.records.all %}
+                    <div class="student-pill">
+                      <span class="student-icon">👤</span>
+                      <span class="student-name">{{ record.student.username }}</span>
+                    </div>
+                    {% empty %}
+                    <p class="empty-text">No students recorded for this session.</p>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% empty %}
+          <div class="empty-state">
+            <p>No archived logs found.</p>
+          </div>
+          {% endfor %}
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function toggleView(id) {
+        const element = document.getElementById(id);
+        if (element.style.display === "block") {
+          element.style.display = "none";
+        } else {
+          element.style.display = "block";
+        }
+      }
+    </script>
+  </body>
+</html>

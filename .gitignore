@@ -1,0 +1,18 @@
+# Python bytecode (compiled files)
+__pycache__/
+*.py[cod]
+
+# Virtual Environment (Very important to ignore!)
+venv/
+env/
+
+# Database (Keep your local data local)
+db.sqlite3
+
+# Folder for uploaded files (if any)
+media/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+.env

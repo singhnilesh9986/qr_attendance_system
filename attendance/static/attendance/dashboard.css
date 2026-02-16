@@ -1,0 +1,19 @@
+body {
+    background-color: #f6f7f8;
+    font-family: 'Inter', sans-serif;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+}
+
+.nav-sidebar {
+    height: 100vh;
+    width: 260px;
+    background: white;
+    border-right: 1px solid #e5e7eb;
+    position: fixed;
+}

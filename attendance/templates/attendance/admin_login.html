@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - QRAttend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'attendance/admin_login.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="login-card w-full max-w-md p-10">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-black text-[#111418]">Admin <span class="text-gray-400">Login</span></h1>
+            <p class="text-gray-500 mt-2">Access the management dashboard</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div>
+                <label class="text-xs font-bold uppercase tracking-widest text-gray-400">Username</label>
+                <input type="text" name="username" class="input-field" placeholder="Enter username" required>
+            </div>
+            
+            <div class="mt-6">
+                <label class="text-xs font-bold uppercase tracking-widest text-gray-400">Password</label>
+                <input type="password" name="password" class="input-field" placeholder="Enter Password" required>
+            </div>
+
+            <button type="submit" class="login-button">Sign In to Dashboard</button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="{% url 'login_selection' %}" class="text-sm text-gray-400 hover:text-black">← Back to selection</a>
+        </div>
+    </div>
+
+</body>
+</html>
