@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wfd0jk8r3#&z++u5#s3xffye&w&y)@civk)aq6i2(hi1mpvo0b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -85,15 +85,17 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://rt3nr1mh-8000.inc1.devtunnels.ms/',
+    'http://rt3nr1mh-8000.inc1.devtunnels.ms/',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'https://rt3nr1mh-8000.inc1.devtunnels.ms/'
 ]
 
 ALLOWED_HOSTS = [
     'rt3nr1mh-8000.inc1.devtunnels.ms', 
     'localhost', 
     '127.0.0.1'
+   'qr_attendance_system.onrender.com',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -165,6 +167,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_URL = 'login_selection'
 
 SOCIALACCOUNT_AUTO_SIGNUP = True  
