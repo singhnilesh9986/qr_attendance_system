@@ -95,7 +95,6 @@ ALLOWED_HOSTS = [
     'rt3nr1mh-8000.inc1.devtunnels.ms', 
     'localhost', 
     '127.0.0.1'
-   'qr_attendance_system.onrender.com',
 ]
 
 ROOT_URLCONF = 'core.urls'
