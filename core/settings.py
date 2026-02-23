@@ -88,7 +88,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://rt3nr1mh-8000.inc1.devtunnels.ms/',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://rt3nr1mh-8000.inc1.devtunnels.ms/'
+    'https://rt3nr1mh-8000.inc1.devtunnels.ms/',
+    "https://qr-attendance-system-8eni.onrender.com",
 ]
 
 ALLOWED_HOSTS = [
