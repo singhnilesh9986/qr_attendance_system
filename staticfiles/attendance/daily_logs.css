@@ -1,0 +1,143 @@
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background: white;
+  border-right: 1px solid #edf2f7;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* CHANGED: Increased margin and added padding to clear the sidebar */
+.main-stage {
+  margin-left: 280px; /* This must match the sidebar width exactly */
+  padding: 60px 80px; /* Increased horizontal padding to push text further right */
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 60px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  text-decoration: none !important;
+  color: #64748b;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #f8fafc;
+  text-decoration: none !important;
+}
+
+.nav-link.active {
+  background-color: #eff6ff;
+  color: #2563eb;
+  text-decoration: none !important;
+}
+
+.scrollable-area {
+  display: block !important;
+  overflow-y: auto;
+  height: calc(100vh - 120px);
+  padding: 10px 0;
+}
+
+.log-card {
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.day-header {
+  padding: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.day-header:hover {
+  background: #f8fafc;
+}
+
+.day-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #6366f1;
+  background: #f0f3ff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.day-title h2 {
+  margin: 8px 0 0 0;
+  font-size: 22px;
+  color: #1e293b;
+}
+
+.day-stats {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.hidden-content {
+  display: none;
+}
+.lecture-item {
+  border-top: 1px solid #f1f5f9;
+  padding: 10px;
+}
+.lecture-summary {
+  padding: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lecture-summary:hover {
+  background: #eff6ff;
+}
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 20px;
+  background: #f8fafc;
+}
+.student-pill {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

@@ -1,0 +1,40 @@
+body {
+    background-color: #f6f7f8;
+    font-family: 'Inter', sans-serif;
+}
+
+.login-card {
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f2f4;
+}
+
+.input-field {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    margin-top: 0.5rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-field:focus {
+    border-color: #111418;
+}
+
+.login-button {
+    width: 100%;
+    background-color: #111418;
+    color: white;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    transition: opacity 0.2s;
+}
+
+.login-button:hover {
+    opacity: 0.9;
+}
