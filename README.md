@@ -46,3 +46,7 @@ python manage.py runserver
 ### 6. Admin Credentials
 # To access the Admin Portal and the Student Database, create a superuser:
 python manage.py createsuperuser
+
+[alt text](image-1.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
