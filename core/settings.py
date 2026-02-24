@@ -180,10 +180,3 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_REDIRECT_URL = '/set-password/'
 
-import os
-from django.contrib.auth import get_user_model
-
-if os.environ.get("RENDER"):
-    User = get_user_model()
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser("admin", "admin@gmail.com", "admin123")
