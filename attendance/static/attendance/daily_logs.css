@@ -19,10 +19,9 @@
   gap: 10px;
 }
 
-/* CHANGED: Increased margin and added padding to clear the sidebar */
 .main-stage {
-  margin-left: 280px; /* This must match the sidebar width exactly */
-  padding: 60px 80px; /* Increased horizontal padding to push text further right */
+  margin-left: 280px; 
+  padding: 60px 80px; 
   background: #f8fafc;
   min-height: 100vh;
 }

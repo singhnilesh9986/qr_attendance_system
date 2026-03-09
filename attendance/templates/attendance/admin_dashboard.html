@@ -209,17 +209,32 @@
       </div>
     </div>
 
-    <script>
-      const activeSessionId = "{{ active_session.id }}";
+<script>
+ 
+  const activeSessionId = "{{ active_session.id }}";
 
-      function toggleModal(show) {
-        const modal = document.getElementById("manualModal");
-        if (show) {
-          modal.classList.remove("hidden");
-        } else {
-          modal.classList.add("hidden");
+  
+  function toggleModal(show) {
+    const modal = document.getElementById("manualModal");
+    if (modal) modal.classList.toggle("hidden", !show);
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    if (activeSessionId && activeSessionId !== "None" && activeSessionId !== "") {
+        console.log("Starting live updates for session:", activeSessionId);
+        
+       
+        if (typeof fetchRecentScans === "function") {
+            fetchRecentScans(activeSessionId);
+            
+            
+            setInterval(() => {
+                fetchRecentScans(activeSessionId);
+            }, 1000);
         }
-      }
-    </script>
+    }
+  });
+</script>
   </body>
 </html>

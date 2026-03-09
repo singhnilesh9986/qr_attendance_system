@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login | QRAttend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'attendance/login.css' %}">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] min-h-screen flex items-center justify-center p-6">
+
+    <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-md border border-gray-100 flex flex-col items-center text-center">
+        
+        <h1 class="text-3xl font-black mb-2 text-gray-800">Student <span class="text-[#137fec]">Login</span></h1>
+        <p class="text-gray-400 text-sm mb-8">Enter your details to join the class</p>
+
+      <form method="POST" class="w-full flex flex-col gap-4">
+            {% csrf_token %}
+            <div class="text-left w-full">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Email</label>
+                <input type="text" name="username" placeholder="Enter Email" required 
+                       class="w-full p-4 bg-[#e8f0fe] border-none rounded-xl outline-none text-gray-700">
+            </div>
+            
+            <div class="text-left w-full">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Password</label>
+                <input type="password" name="password" placeholder="Enter your Password" required 
+                       class="w-full p-4 bg-[#e8f0fe] border-none rounded-xl outline-none text-gray-700">
+            </div>
+            
+            <button type="submit" class="w-full bg-[#137fec] text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition-all mt-4">
+                Login
+            </button>
+
+            <div class="relative flex items-center py-6 w-full">
+                <div class="flex-grow border-t border-gray-100"></div>
+                <span class="flex-shrink mx-4 text-gray-300 text-[10px] font-bold uppercase tracking-widest">Or</span>
+                <div class="flex-grow border-t border-gray-100"></div>
+            </div>
+
+            <button onclick="googleSignIn()" type="button" class="w-full bg-white border border-gray-200 text-gray-700 font-bold py-4 rounded-xl shadow-sm hover:bg-gray-50 transition-all flex justify-center items-center gap-3">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+                Continue with Google
+            </button>
+        </form>
+        <div class="relative flex items-center py-6 w-full">
+    <div class="flex-grow border-t border-gray-100"></div>
+    <div class="flex-grow border-t border-gray-100"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+   const firebaseConfig = {
+    apiKey: "AIzaSyCzxbUjlk7fVPIU7coSPV1iwQSDQ_TgxMU",
+    authDomain: "qr-attendance-system-c6c05.firebaseapp.com",
+    projectId: "qr-attendance-system-c6c05",
+    storageBucket: "qr-attendance-system-c6c05.appspot.com",
+    messagingSenderId: "181476889078",
+    appId: "1:181476889078:web:298d675c169bf8992137d7",
+    measurementId: "G-BVJ6S33G8T"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  function googleSignIn() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then((result) => {
+        const user = result.user;
+        window.location.href = `/login/verify/?email=${user.email}&name=${user.displayName}`;
+    }).catch((error) => {
+        alert("Google Login Failed: " + error.message);
+    });
+  }
+</script>
+</body>
+</html>

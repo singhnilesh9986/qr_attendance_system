@@ -5,14 +5,27 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.dispatch import receiver
-from allauth.account.signals import user_signed_up
 from django.contrib.auth.decorators import login_required
-from .models import Department, Subject, AttendanceSession, AttendanceRecord
+from .models import Department, Subject, AttendanceSession, AttendanceRecord, StudentProfile
 import json
 from math import radians, cos, sin, asin, sqrt
+from firebase_admin import auth as firebase_auth
+import os
+import json
+import firebase_admin
+from firebase_admin import credentials
 
+if not firebase_admin._apps:
+  
+    fb_config = os.environ.get('FIREBASE_CONFIG')
+    if fb_config:
+        
+        cred = credentials.Certificate(json.loads(fb_config))
+    else:
+        
+        cred = credentials.Certificate("serviceAccountKey.json")
 
+    firebase_admin.initialize_app(cred)
 
 def haversine(lat1, lon1, lat2, lon2):
     
@@ -55,8 +68,8 @@ def submit_attendance(request):
             
     return JsonResponse({"status": "error", "message": "Invalid request."})
 
-def home(request):
-    return render(request,'attendance/home.html')
+def home(request):  
+    return render(request, 'attendance/home.html')
 
 def login_selection(request):
     return render(request, 'attendance/login_selection.html')
@@ -125,28 +138,6 @@ def set_password(request):
             return redirect('home')
             
     return render(request, 'attendance/set_password.html')
-        
-@receiver(user_signed_up)
-def google_signup_redirect(sender, request, user, **kwargs):
-    return redirect('set_password')
-
-@login_required
-def admin_dashboard(request):
-    departments = Department.objects.all()
-    subjects = Subject.objects.all()
-    active_session = AttendanceSession.objects.filter(admin=request.user, status='active').last()
-    
-    present_students = []
-    if active_session:
-        present_students = active_session.records.all().order_by('-timestamp')
-
-    context = {
-        'departments': departments,
-        'subjects': subjects,
-        'active_session': active_session,
-        'present_students': present_students,
-    }
-    return render(request, 'attendance/admin_dashboard.html', context)
 
 def stop_session(request):
     active_session = AttendanceSession.objects.filter(admin=request.user, status='active').last()
@@ -272,3 +263,48 @@ def archive_today(request):
 def students_list_view(request):
     students = User.objects.all().order_by('username') 
     return render(request, 'attendance/students_list.html', {'students': students})
+
+
+
+def firebase_signup(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        name = request.POST.get('name')
+        roll_no = request.POST.get('roll_no')
+        try:
+            firebase_auth.create_user(email=email, password=password)
+            django_user = User.objects.create_user(username=email, email=email, password=password)
+            StudentProfile.objects.create(user=django_user, full_name=name, roll_number=roll_no)
+            login(request, django_user)
+            return redirect('home')
+        except Exception as e:
+            return render(request, 'attendance/signup.html', {'error': str(e)})
+    return render(request, 'attendance/signup.html')
+
+def firebase_login(request):
+    if request.method == "POST":
+        email = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'attendance/login.html', {'error': 'Invalid email or password'})
+    return render(request, 'attendance/login.html')
+
+def google_verify_login(request):
+    email = request.GET.get('email')
+    name = request.GET.get('name')
+    if not email: return redirect('student_login')
+    
+    user, created = User.objects.get_or_create(username=email, email=email)
+    
+    if created:
+        StudentProfile.objects.get_or_create(user=user, defaults={'full_name': name, 'roll_number': "PENDING"})
+        login(request, user)
+        return redirect('set_password')
+    
+    login(request, user)
+    return redirect('home')

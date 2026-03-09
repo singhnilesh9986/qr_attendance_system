@@ -57,6 +57,14 @@ class AttendanceRecord(models.Model):
     def __str__(self):
         return f"{self.student.username} - {self.session}"
 
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    roll_number = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return f"{self.full_name} ({self.roll_number})"
+
 
 
 

@@ -16,3 +16,6 @@ media/
 .DS_Store
 Thumbs.db
 .env
+# Firebase Secret Key
+serviceAccountKey.json
+.vercel

@@ -30,41 +30,29 @@
     </button>
 </div>
 
-<header class="sticky top-0 z-50 w-full border-b border-[#f0f2f4] bg-white/80 backdrop-blur-md px-4 md:px-10 lg:px-40 py-3">
-    <div class="max-w-[1280px] mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-4 text-primary">
+<header class="sticky top-0 z-50 w-full border-b border-[#f0f2f4] bg-white/80 backdrop-blur-md px-6 py-3">
+    <div class="flex items-center justify-between w-full">
+        <div class="flex items-center text-primary">
             <h2 class="text-xl font-bold font-display text-[#111418]">QRAttend</h2>
         </div>
         
-<nav class="flex gap-8 items-center">
-    {% if user.is_authenticated %}
-        <div class="relative">
-    <button id="avatarBtn" class="w-10 h-10 bg-[#137fec] text-white flex items-center justify-center rounded-full font-black shadow-md focus:outline-none active:scale-90 transition-transform">
-        {{ user.username|slice:":1"|upper }}
-    </button>
-    
-    <div id="avatarMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 border border-gray-100 z-50">
-        <a href="{% url 'admin_logout' %}" class="block px-4 py-2 text-sm text-red-600 font-bold hover:bg-red-50">
-            Sign Out
-        </a>
-    </div>
-</div>
-
-        <script>
-            const btn = document.getElementById('avatarBtn');
-            const menu = document.getElementById('avatarMenu');
-            if(btn) {
-                btn.addEventListener('click', (e) => {
-                    menu.classList.toggle('hidden');
-                    e.stopPropagation();
-                });
-                window.addEventListener('click', () => menu.classList.add('hidden'));
-            }
-        </script>
-    {% else %}
-        <a href="{% url 'login_selection' %}" class="bg-[#f0f2f4] px-4 py-2 rounded-lg text-sm font-bold">Login</a>
-    {% endif %}
-</nav>
+        <nav class="flex items-center">
+            {% if user.is_authenticated %}
+                <div class="relative">
+                    <button id="avatarBtn" onclick="toggleMenu()" class="w-10 h-10 bg-[#137fec] text-white flex items-center justify-center rounded-full font-black shadow-md focus:outline-none active:scale-90 transition-transform">
+                        {{ user.username|slice:":1"|upper }}
+                    </button>
+                    
+                    <div id="avatarMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 border border-gray-100 z-50">
+                        <a href="{% url 'admin_logout' %}" class="block px-4 py-2 text-sm text-red-600 font-bold hover:bg-red-50">
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'login_selection' %}" class="bg-[#f0f2f4] px-4 py-2 rounded-lg text-sm font-bold">Login</a>
+            {% endif %}
+        </nav>
     </div>
 </header>
 
@@ -142,6 +130,20 @@
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="{% static 'attendance/student_scanner.js' %}"></script>
+<script>
+    function toggleMenu() {
+    const menu = document.getElementById('avatarMenu');
+    menu.classList.toggle('hidden');
+}
+
+window.addEventListener('click', function(e) {
+    const menu = document.getElementById('avatarMenu');
+    const btn = document.getElementById('avatarBtn');
+    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+    }
+});
+</script>
 
 </body>
 </html>

@@ -18,7 +18,7 @@ html {
   overflow: hidden;
 }
 
-/* SIDEBAR */
+
 .sidebar {
   width: 280px;
   background: white;
@@ -43,7 +43,7 @@ html {
   margin-bottom: 25px;
 }
 
-/* Selectors in Sidebar */
+
 .sidebar-selectors {
   background: #f9fafb;
   padding: 15px;
@@ -61,13 +61,7 @@ html {
   color: #4b5563;
   margin-bottom: 5px;
 }
-.field select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background: white;
-}
+
 .btn-generate-blue {
   width: 100%;
   background: var(--primary-blue);
@@ -200,4 +194,32 @@ html {
   font-size: 0.75rem;
   color: var(--primary-blue);
   font-weight: 700;
+}
+
+
+.sidebar-selectors .field select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  
+
+  background-color: #ffffff !important; 
+  color: #1f2937 !important;           
+  appearance: auto !important;       
+  
+ 
+  box-shadow: none !important;
+}
+
+
+.sidebar-selectors .field select option {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.sidebar-selectors .field select:focus {
+  outline: 2px solid var(--primary-blue) !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
 }

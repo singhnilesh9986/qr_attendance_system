@@ -1,9 +1,3 @@
-/**
- * admin_dashboard.js
- * Pure JavaScript - Handles Geofencing and Live Scan Updates
- */
-
-// 1. Capture Laptop Location and Submit Form
 function getLaptopLocation() {
   const form = document.getElementById("qrForm");
 
@@ -16,7 +10,7 @@ function getLaptopLocation() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // These IDs must match the hidden inputs in your HTML form
+        
         document.getElementById("admin_lat").value = position.coords.latitude;
         document.getElementById("admin_long").value = position.coords.longitude;
 
@@ -39,72 +33,43 @@ function getLaptopLocation() {
   }
 }
 
-// 2. Live Update Logic
 function fetchRecentScans(sessionId) {
-  if (!sessionId) {
-    console.log("No active session ID found to poll scans.");
-    return;
-  }
+  if (!sessionId || sessionId === "None" || sessionId === "") return;
 
   fetch(`/get-live-scans/${sessionId}/`)
     .then((response) => response.json())
     .then((data) => {
       const listContainer = document.querySelector(".scan-list");
-      const countBadge = document.querySelector(".total-count");
-
-      // Update the total count badge if it exists
-      if (countBadge) countBadge.innerText = `Total: ${data.students.length}`;
-
+      
       if (listContainer) {
-        // If no students have scanned yet
         if (data.students.length === 0) {
-          listContainer.innerHTML =
-            '<p class="text-center text-gray-400 py-4">Waiting for scans...</p>';
+          listContainer.innerHTML = '<p class="empty-msg text-center text-gray-400 py-4">Waiting for first scan...</p>';
           return;
         }
 
-        listContainer.innerHTML = "";
+      
+        let newHtml = "";
         data.students.forEach((student) => {
-          listContainer.innerHTML += `
-                        <div class="student-card flex items-center gap-4 p-3 border-b border-gray-100">
-                            <div class="avatar bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold">
-                                ${student.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="details flex-1">
-                                <strong class="block text-gray-800">${student.name}</strong>
-                                <small class="text-gray-500 text-xs uppercase">ID: #STU-${student.id}</small>
-                            </div>
-                            <div class="time-status text-xs font-semibold text-green-500 bg-green-50 px-2 py-1 rounded">
-                                ${student.time || "Present"}
-                            </div>
-                        </div>
-                    `;
+          newHtml += `
+            <div class="student-card flex items-center gap-4 p-3 border-b border-gray-100">
+                <div class="avatar bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold">
+                    ${student.name.charAt(0).toUpperCase()}
+                </div>
+                <div class="details flex-1">
+                    <strong class="block text-gray-800">${student.name}</strong>
+                </div>
+                <div class="time-status text-xs font-semibold text-green-500 bg-green-50 px-2 py-1 rounded">
+                    ${student.time}
+                </div>
+            </div>`;
         });
+        listContainer.innerHTML = newHtml;
       }
     })
     .catch((err) => console.error("Update Error:", err));
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  // Check if the variable from our HTML exists and is a valid ID
-  if (
-    typeof activeSessionId !== "undefined" &&
-    activeSessionId !== "None" &&
-    activeSessionId !== ""
-  ) {
-    // 1. Initial fetch (so we don't wait 3 seconds for the first load)
-    fetchRecentScans(activeSessionId);
 
-    // 2. Start the 3-second update loop
-    setInterval(() => fetchRecentScans(activeSessionId), 3000);
-
-    console.log("Attendance polling started for Session:", activeSessionId);
-  } else {
-    console.log("No active session detected. Polling skipped.");
-  }
-});
-
-// Toggle Modal Visibility
 function toggleModal(show) {
   const modal = document.getElementById("manualModal");
   modal.classList.toggle("hidden", !show);
