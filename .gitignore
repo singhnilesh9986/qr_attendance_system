@@ -19,3 +19,8 @@ Thumbs.db
 # Firebase Secret Key
 serviceAccountKey.json
 .vercel
+*.sqlite3
+__pycache__/
+*.pyc
+.env
+staticfiles/
