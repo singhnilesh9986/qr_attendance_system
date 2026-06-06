@@ -4,6 +4,7 @@ from pathlib import Path
 import firebase_admin
 from firebase_admin import credentials
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -71,6 +72,10 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# If a DATABASE_URL environment variable exists (like on Render), use Supabase instead
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
