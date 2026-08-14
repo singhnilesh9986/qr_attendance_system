@@ -297,12 +297,21 @@ def firebase_login(request):
 def google_verify_login(request):
     email = request.GET.get('email')
     name = request.GET.get('name')
-    if not email: return redirect('student_login')
+    if not email: 
+        return redirect('student_login')
     
     user, created = User.objects.get_or_create(username=email, email=email)
     
     if created:
-        StudentProfile.objects.get_or_create(user=user, defaults={'full_name': name, 'roll_number': "PENDING"})
+        # Create a unique temporary roll number using their email prefix
+        # Example: nilesh.singh123@gmail.com becomes PENDING_nilesh.singh123
+        email_prefix = email.split('@')[0]
+        temp_roll_number = f"PENDING_{email_prefix}"
+        
+        StudentProfile.objects.get_or_create(
+            user=user, 
+            defaults={'full_name': name, 'roll_number': temp_roll_number}
+        )
         login(request, user)
         return redirect('set_password')
     
