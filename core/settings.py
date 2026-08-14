@@ -19,6 +19,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'qr-attendance-system-iota.vercel.app',
+    'qr-attendance-system-c6c05.firebaseapp.com',
     '.vercel.app',
     '.now.sh',
 ]
@@ -122,6 +123,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 CSRF_TRUSTED_ORIGINS = [
     'https://qr-attendance-system-iota.vercel.app',
+    'https://qr-attendance-system-c6c05.firebaseapp.com',
     'http://rt3nr1mh-8000.inc1.devtunnels.ms',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
