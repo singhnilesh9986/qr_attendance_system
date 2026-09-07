@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from pathlib import Path
 import firebase_admin
 from firebase_admin import credentials
@@ -10,20 +11,21 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-wfd0jk8r3#&z++u5#s3xffye&w&y)@civk)aq6i2(hi1mpvo0b'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-wfd0jk8r3#&z++u5#s3xffye&w&ys@civkaq6i2(hi1mpvo0b')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'rt3nr1mh-8000.inc1.devtunnels.ms',
     'localhost',
     '127.0.0.1',
-    'qr-attendance-system-iota.vercel.app',
+    'qr-attendance-system-7qs5.onrender.com', 
+    '.onrender.com',
     'qr-attendance-system-c6c05.firebaseapp.com',
     '.vercel.app',
     '.now.sh',
+    '*',
 ]
-ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -75,7 +77,6 @@ DATABASES = {
     }
 }
 
-# If a DATABASE_URL environment variable exists (like on Render), use Supabase instead
 if os.environ.get('DATABASE_URL'):
     DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
@@ -98,10 +99,16 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'attendance', 'static'),
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 if not firebase_admin._apps:
-    import json
     fb_config = os.environ.get('FIREBASE_CONFIG')
     if fb_config:
         try:
@@ -123,9 +130,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://qr-attendance-system-iota.vercel.app',
+    'https://qr-attendance-system-7qs5.onrender.com',
     'https://qr-attendance-system-c6c05.firebaseapp.com',
     'http://rt3nr1mh-8000.inc1.devtunnels.ms',
+    'https://rt3nr1mh-8000.inc1.devtunnels.ms',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
